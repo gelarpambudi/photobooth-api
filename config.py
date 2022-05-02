@@ -1,9 +1,11 @@
 from flask import Flask
+from flask_cors import CORS
 import os
 import logging
 import confuse
 
 app = Flask(__name__)
+CORS(app)
 app_config = confuse.Configuration("photobooth_py", __name__)
 app_config.set_file(os.environ['CONFIG_PATH'])
 

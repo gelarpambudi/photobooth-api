@@ -1,0 +1,2 @@
+image result path
+static/res_img/:tx_id/:effect/compiled.jpg

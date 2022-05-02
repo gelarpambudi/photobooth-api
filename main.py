@@ -1,7 +1,7 @@
 import json
 import os
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, url_for
 from config import app
 from image_processing import *
 from send_email import *
@@ -46,7 +46,7 @@ def generate_image_api():
         data = {
             "status_code": 200,
             "message": "Success",
-            "result_dir": [ os.path.join(result_path, x) for x in os.listdir(result_path) ],
+            "result_dir": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ],
             "error": "null"
         }
         return jsonify(data), 200
@@ -134,6 +134,10 @@ def print_image_api():
         }
         return jsonify(data), 503
 
+
+@app.route("/static/res_image/<tx_id>/effect", methods=["GET"])
+def image_url(tx_id, effect):
+    return "<img src=" + url_for('static', filename=f'{tx_id}/{effect}/compiled.jpg') + ">"
 
 
 if __name__ == "__main__":
