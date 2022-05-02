@@ -1,0 +1,8 @@
+flask
+numpy
+imageio
+opencv-python
+scipy
+confuse
+pillow
+pywin32
