@@ -26,7 +26,7 @@
         |------|-----------|--------|
         |   BODY   |   status_code        |  int      |
         |   BODY   |   message        | string       |
-        |   BODY   |   result_dir   | list of string |
+        |   BODY   |   result_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/compiled.jpg`) |
         |   BODY    | error | string |
 
         E.g.
@@ -35,10 +35,10 @@
         {
             "status_code": 200,
             "message": "Success",
-            "result_dir": [
-                /path/to/result/dir-1,
-                /path/to/result/dir-2,
-                /path/to/result/dir-3
+            "result_url": [
+                http://localhost/static/res_image/123456/winter/compiled.jpg,
+                http://localhost/static/res_image/123456/summer/compiled.jpg,
+                http://localhost/static/res_image/123456/sepia/compiled.jpg
             ],
             "error": "null"
         }

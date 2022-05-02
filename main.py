@@ -46,7 +46,7 @@ def generate_image_api():
         data = {
             "status_code": 200,
             "message": "Success",
-            "result_dir": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ],
+            "result_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ],
             "error": "null"
         }
         return jsonify(data), 200
