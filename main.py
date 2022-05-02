@@ -46,14 +46,15 @@ def generate_image_api():
         data = {
             "status_code": 200,
             "message": "Success",
-            "result_dir": [ os.path.join(result_path, x) for x in os.listdir(result_path) ]
+            "result_dir": [ os.path.join(result_path, x) for x in os.listdir(result_path) ],
+            "error": "null"
         }
         return jsonify(data), 200
     except Exception as e:
         data = {
             "status_code": 503,
             "message": "Cannot process the image",
-            "Error": e
+            "error": e
         }
         return jsonify(data), 503
 
@@ -92,7 +93,8 @@ def send_email_api():
             )
         data = {
             "status_code": 200,
-            "message": "Success"
+            "message": "Success",
+            "error": "null"
         }
         return jsonify(data), 200
     except Exception as e:
@@ -120,13 +122,15 @@ def print_image_api():
 
         data = {
             "status_code": 200,
-            "message": "Success"
+            "message": "Success",
+            "error": "null"
         }
         return jsonify(data), 200
     except Exception as e:
         data = {
             "status_code": 503,
-            "message": "Failed to print: {e}",
+            "message": "Failed to print image",
+            "error": f"{e}"
         }
         return jsonify(data), 503
 
