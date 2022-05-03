@@ -32,14 +32,12 @@ def generate_email_body(recipient):
     return email_body
 
 def compose_email(recipient_name, email, tx_id, effect):
-    msg = MIMEMultipart()
+    msg = MIMEMultipart('alternative')
     msg['From'] = app.config['EMAIL_USERNAME']
     msg['To'] = COMMASPACE.join(email)
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = f"ITS.SNAPLAB - Photos for {recipient_name}"
     message_body = generate_email_body(recipient_name)
-
-    print(message_body)
 
     results_dir = os.path.join(app.config["IMG_RESULT_BASE_DIR"], tx_id)
     attached_files = [
@@ -47,7 +45,7 @@ def compose_email(recipient_name, email, tx_id, effect):
         os.path.join(results_dir, effect)+'/compiled.gif'
     ]
 
-    msg.attach(MIMEText('html',message_body))
+    msg.attach(MIMEText(message_body, 'html'))
     for path in attached_files:
         part = MIMEBase('application', "octet-stream")
         with open(path, 'rb') as file:
