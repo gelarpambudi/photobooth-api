@@ -61,15 +61,15 @@ def generate_image_api():
 
 @app.route("/api/get-frame", methods=["GET"])
 def get_frame_api():
-    frame_list = []
-    for frame in app.config['AVAILABLE_FRAME']:
-        frame_list.append(
-            os.path.join(app.config['IMG_FRAME_BASE_DIR'], frame)
-        )
+    eight_frame_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_8_FRAME'] ]
+    six_frame_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_6_FRAME'] ]
     data = {
         "status_code": 200,
         "message": "Success",
-        "frame_list": frame_list
+        "frame_list": {
+            "eight_frame_list": eight_frame_list,
+            "six_frame_list": six_frame_list
+        }
     }
     return jsonify(data), 200
 
@@ -141,4 +141,4 @@ def image_url(tx_id, effect):
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port='8080', debug=True)
+    app.run(host='localhost', port='8080')
