@@ -60,18 +60,25 @@
         |------|-----------|--------|
         |   BODY   |   status_code        |  int      |
         |   BODY   |   message        | string       |
-        |   BODY   |   frame_list   | list of string |
+        |   BODY   |   frame_list   | dict consists of `eight_frame_list` and `six_frame_list` keys |
 
         E.g.
         ```
         {
-            "status_code": 200,
-            "message": "Success",
-            "result_dir": [
-                /path/to/result/frame-1,
-                /path/to/result/frame-2,
-                /path/to/result/frame-3
+        "frame_list": {
+            "eight_frame_list": [
+            "http://localhost:8080/static/frame_assets/frame-1.png",
+            "http://localhost:8080/static/frame_assets/frame-2.png",
+            "http://localhost:8080/static/frame_assets/frame-3.png"
+            ],
+            "six_frame_list": [
+            "http://localhost:8080/static/frame_assets/frame-5.png",
+            "http://localhost:8080/static/frame_assets/frame-6.png",
+            "http://localhost:8080/static/frame_assets/frame-7.png" 
             ]
+        },
+        "message": "Success",
+        "status_code": 200
         }
         ```
 
