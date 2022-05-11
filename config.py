@@ -18,6 +18,7 @@ try:
     app.config["EMAIL_PASSWD"] = app_config["EMAIL_PASSWD"].get()
     app.config["AVAILABLE_EFFECT"] = app_config["AVAILABLE_EFFECT"].as_str_seq()
     app.config["AVAILABLE_8_FRAME"] = app_config["AVAILABLE_8_FRAME"].as_str_seq()
+    app.config["AVAILABLE_8_FRAME_ELLIPSE"] = app_config["AVAILABLE_8_FRAME_ELLIPSE"].as_str_seq()
     app.config["AVAILABLE_6_FRAME"] = app_config["AVAILABLE_6_FRAME"].as_str_seq()
     app.config["SMTP_SERVERNAME"] = app_config["SMTP_SERVERNAME"].get()
     app.config["SMTP_SERVERPORT"] = app_config["SMTP_SERVERPORT"].get(int)

@@ -156,7 +156,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
   frame_img = load_image(os.path.join(frame_base_dir, frame_name), True)
   img_list = os.listdir(src_img_path)  
 
-  if frame_name in app.config['6_FRAME_LIST']:
+  if frame_name in app.config['AVAILABLE_6_FRAME']:
     compiled_image = compile_np_image(
       src_img_path,
       img_list,
@@ -196,7 +196,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     final_image = overlay_transparent(compiled_image, frame_img)
 
     return final_image
-  else:
+  elif frame_name in app.config['AVAILABLE_8_FRAME'] and frame_name not in app.config['AVAILABLE_8_FRAME_ELLIPSE']:
     compiled_image_1 = compile_np_image(
       src_img_path,
       img_list[:4],
@@ -220,6 +220,53 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
       padding_height=30
+    )
+    bottom_padding = create_padding(
+      padding_width=compiled_image.shape[1],
+      padding_height= height_diff - top_padding.shape[0]
+    )
+
+    compiled_image = cv2.vconcat([top_padding, compiled_image, bottom_padding])
+
+    width_diff = frame_img.shape[1] - compiled_image.shape[1]
+    right_padding = create_padding(
+      padding_width=width_diff//2,
+      padding_height=compiled_image.shape[0]
+    )
+    left_padding = create_padding(
+      padding_width=(width_diff//2)+1,
+      padding_height= compiled_image.shape[0]
+    )
+
+    compiled_image = cv2.hconcat([left_padding, compiled_image, right_padding])
+    final_image = overlay_transparent(compiled_image, frame_img)
+
+    return final_image
+
+  elif frame_name in app.config['AVAILABLE_8_FRAME'] and frame_name in app.config['AVAILABLE_8_FRAME_ELLIPSE']:
+    compiled_image_1 = compile_np_image(
+      src_img_path,
+      img_list[:4],
+      padding=20,
+      new_size=(1130,790)
+    )
+    compiled_image_2 = compile_np_image(
+      src_img_path,
+      img_list[4:],
+      padding=20,
+      new_size=(1130,790)
+    )
+    center_padding = create_padding(
+      padding_width=70,
+      padding_height=compiled_image_1.shape[0]
+    )
+
+    compiled_image = cv2.hconcat([compiled_image_1, center_padding, compiled_image_2])
+    
+    height_diff = frame_img.shape[0] - compiled_image.shape[0]
+    top_padding = create_padding(
+      padding_width=compiled_image.shape[1],
+      padding_height=130
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
