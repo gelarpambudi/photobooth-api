@@ -51,6 +51,7 @@ def generate_image_api():
         }
         return jsonify(data), 200
     except Exception as e:
+        logging.error(f"Error: {e}", exc_info=True)        
         data = {
             "status_code": 503,
             "message": "Cannot process the image",
@@ -98,6 +99,7 @@ def send_email_api():
         }
         return jsonify(data), 200
     except Exception as e:
+        logging.error(f"Error: {e}", exc_info=True)
         data = {
             "status_code": 503,
             "message": "Failed to send email",
@@ -116,9 +118,7 @@ def print_image_api():
 
     try:
         img_file = os.path.join(result_path, f"{effect}/compiled.jpg")
-        printer_name = get_printer_name()
-        dc = get_device_context(printer_name)
-        print_image(img_file, dc)
+        print_image_hotfolder(img_file)
 
         data = {
             "status_code": 200,
@@ -127,6 +127,7 @@ def print_image_api():
         }
         return jsonify(data), 200
     except Exception as e:
+        logging.error(f"Error: {e}", exc_info=True)
         data = {
             "status_code": 503,
             "message": "Failed to print image",
@@ -141,4 +142,4 @@ def image_url(tx_id, effect):
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port='8080')
+    app.run(host='localhost', port='8080', debug=True)
