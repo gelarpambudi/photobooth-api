@@ -98,7 +98,7 @@
         ```
         {
             "tx_id": "001122",
-            "frame_id": "winter",
+            "effect": "winter",
             "email": "gelargelur@gmail.com",
             "recipient_name": "Gelar"
         }
@@ -142,7 +142,7 @@
         ```
         {
             "tx_id": "001122",
-            "frame_id": "winter",
+            "effect": "winter",
         }
 
         ```
