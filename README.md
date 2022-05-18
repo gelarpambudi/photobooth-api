@@ -169,3 +169,37 @@
             "error": "Your python error message"
         }
         ```
+
+- `/api/upload-image`
+    - **Usage:** Upload the captured image
+    - **Request Method:** `POST`
+    - **Request parameter:**
+
+        | TYPE | PARAMETER | VALUES |
+        |------|-----------|--------|
+        |   HTTP FORM   |   tx_id        |  string      |
+        |   HTTP FORM   |   img_file        | list of images       |
+    - **Response:**
+
+        | TYPE | PARAMETER | VALUES |
+        |------|-----------|--------|
+        |   BODY   |   status_code        |  int      |
+        |   BODY   |   message        | string       |
+        |   BODY    | error | string |
+
+        E.g.
+        ```
+        #ON SUCCESS
+        {
+            "status_code": 200,
+            "message": "Success",
+            "error": "null"
+        }
+
+        #ON FAILURE
+        {
+            "status_code": 503,
+            "message": "Failed to upload email",
+            "error": "Your python error message"
+        }
+        ```

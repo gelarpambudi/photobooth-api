@@ -135,6 +135,34 @@ def print_image_api():
         }
         return jsonify(data), 503
 
+@app.route("/api/upload-image", methods=["POST"])
+def upload_image_api():
+    tx_id = str(request.form['tx_id'])
+    img_files = request.files.getlist("img_file")
+    src_img_base_dir = app.config["IMG_SRC_BASE_DIR"]
+
+    try:
+        img_dir = f"{src_img_base_dir}/{tx_id}"
+        os.makedirs(img_dir, exist_ok=True)
+        for img in img_files:
+            img.save(os.path.join(img_dir, img.filename))
+        
+        data = {
+            "status_code": 200,
+            "message": "Success",
+            "error": "null"
+        }
+        
+        return jsonify(data), 200
+    except Exception as e:
+        logging.error(f"Error: {e}", exc_info=True)
+        data = {
+            "status_code": 503,
+            "message": "Failed to upload image",
+            "error": f"{e}"
+        }
+        return jsonify(data), 503
+
 
 @app.route("/static/res_image/<tx_id>/effect", methods=["GET"])
 def image_url(tx_id, effect):
