@@ -67,9 +67,12 @@ def apply_invert_effect(np_img):
     inv = cv2.bitwise_not(np_img)
     return inv
 
-
 def apply_all_effect(img_np, result_path, image):
     img_file = image
+
+    #save original effect
+    save_image(img_np, os.path.join(result_path, f"original/{img_file}"))
+    
     #apply and save grayscale
     grayscale_img = apply_grasycale_effect(img_np)
     save_image(grayscale_img, os.path.join(result_path, f"grayscale/{img_file}"))
