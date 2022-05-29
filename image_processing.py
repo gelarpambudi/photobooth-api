@@ -98,11 +98,11 @@ def apply_all_effect(img_np, result_path, image):
     save_image(invert_img, os.path.join(result_path, f"invert/{img_file}"))
 
 
-def generate_gif(img_path, out_gif):
+def generate_gif(img_path, out_gif, delay=1.5):
   img_files = os.listdir(img_path)
   if "compiled.jpg" in img_files:
     img_files.remove("compiled.jpg")
-  with imageio.get_writer(out_gif, mode='I', duration=1.5) as writer:
+  with imageio.get_writer(out_gif, mode='I', duration=delay) as writer:
     for filename in img_files:
         image = imageio.imread(os.path.join(img_path, filename))
         writer.append_data(image)

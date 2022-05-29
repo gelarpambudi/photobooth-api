@@ -26,7 +26,8 @@
         |------|-----------|--------|
         |   BODY   |   status_code        |  int      |
         |   BODY   |   message        | string       |
-        |   BODY   |   result_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/compiled.jpg`) |
+        |   BODY   |   img_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/1.png`) |
+        |   BODY   |   gif_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/compiled.gif`) |
         |   BODY    | error | string |
 
         E.g.
