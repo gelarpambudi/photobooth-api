@@ -5,6 +5,21 @@ import numpy as np
 from config import app
 from scipy.interpolate import UnivariateSpline
 
+from fimage import FImage
+from fimage.filters import *
+from fimage.presets import Preset
+
+class BeautyFilter(Preset):
+  filters = [
+    Exposure(9),
+    Brightness(1),
+    Saturation(15),
+    Contrast(4),
+    Gamma(0.83),
+    Vibrance(15)
+  ]
+
+
 def load_image(img_path, transparent=False):
   if transparent:
     img = cv2.imread(img_path, -1)
@@ -21,6 +36,16 @@ def resize_image(np_img, new_size):
 def lookuptable(x, y):
   spline = UnivariateSpline(x,y)
   return spline(range(256))
+
+
+def apply_beauty_filter(img_path):
+  img = FImage(img_path)
+  img.apply(BeautyFilter)
+  img.save(img_path)
+
+  np_img = load_image(img_path)
+  beauty = cv2.bilateralFilter(np_img, 7, 25, 25)
+  return beauty
 
 
 def apply_grasycale_effect(np_img):
@@ -72,6 +97,8 @@ def apply_all_effect(img_np, result_path, image):
 
     #save original effect
     save_image(img_np, os.path.join(result_path, f"original/{img_file}"))
+    beauty_img = apply_beauty_filter(os.path.join(result_path, f"original/{img_file}"))
+    save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
     
     #apply and save grayscale
     grayscale_img = apply_grasycale_effect(img_np)

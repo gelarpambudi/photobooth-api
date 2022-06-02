@@ -7,3 +7,4 @@ scipy
 confuse
 pillow
 pywin32
+fimage
