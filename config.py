@@ -14,6 +14,7 @@ try:
     app.config["IMG_RESULT_BASE_DIR"] = app_config["IMG_RESULT_BASE_DIR"].get()
     app.config["IMG_FRAME_BASE_DIR"] = app_config["IMG_FRAME_BASE_DIR"].get()
     app.config["IMG_FRAME_ASSETS_DIR"] = app_config["IMG_FRAME_ASSETS_DIR"].get()
+    app.config["CASCADE_CLASSIFIER_XML"] = app_config["CASCADE_CLASSIFIER_XML"].get()
     app.config["EMAIL_USERNAME"] = app_config["EMAIL_USERNAME"].get()
     app.config["EMAIL_PASSWD"] = app_config["EMAIL_PASSWD"].get()
     app.config["AVAILABLE_EFFECT"] = app_config["AVAILABLE_EFFECT"].as_str_seq()

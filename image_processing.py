@@ -9,6 +9,8 @@ from fimage import FImage
 from fimage.filters import *
 from fimage.presets import Preset
 
+
+
 class BeautyFilter(Preset):
   filters = [
     Exposure(9),
@@ -19,6 +21,9 @@ class BeautyFilter(Preset):
     Vibrance(15)
   ]
 
+
+def load_cascade_classifier(classifier_path):
+  return cv2.CascadeClassifier(classifier_path)
 
 def load_image(img_path, transparent=False):
   if transparent:
@@ -37,6 +42,10 @@ def lookuptable(x, y):
   spline = UnivariateSpline(x,y)
   return spline(range(256))
 
+def detect_face(img, cascade_classifier):
+  grayscale = apply_grasycale_effect(img)
+  face_rects = cascade_classifier.detectMultiScale(grayscale, scaleFactor=1.1, minNeighbors=4)
+  return face_rects
 
 def apply_beauty_filter(img_path):
   img = FImage(img_path)
@@ -44,8 +53,16 @@ def apply_beauty_filter(img_path):
   img.save(img_path)
 
   np_img = load_image(img_path)
-  beauty = cv2.bilateralFilter(np_img, 7, 25, 25)
-  return beauty
+  face = detect_face(
+    np_img,
+    load_cascade_classifier(app.config["CASCADE_CLASSIFIER_XML"])
+  )
+  
+  for (x,y,w,h) in face:
+    beauty = cv2.bilateralFilter(np_img[y:y+h, x:x+w], 7, 25, 25)
+    np_img[y:y+h, x:x+w] = beauty
+
+  return np_img
 
 
 def apply_grasycale_effect(np_img):
