@@ -43,7 +43,7 @@ def lookuptable(x, y):
   return spline(range(256))
 
 def detect_face(img, cascade_classifier):
-  grayscale = apply_grasycale_effect(img)
+  grayscale = apply_grayscale_effect(img)
   face_rects = cascade_classifier.detectMultiScale(grayscale, scaleFactor=1.1, minNeighbors=4)
   return face_rects
 
@@ -65,7 +65,7 @@ def apply_beauty_filter(img_path):
   return np_img
 
 
-def apply_grasycale_effect(np_img):
+def apply_grayscale_effect(np_img):
   grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
   return grayscale
 
@@ -118,7 +118,7 @@ def apply_all_effect(img_np, result_path, image):
     save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
     
     #apply and save grayscale
-    grayscale_img = apply_grasycale_effect(img_np)
+    grayscale_img = apply_grayscale_effect(img_np)
     save_image(grayscale_img, os.path.join(result_path, f"grayscale/{img_file}"))
 
     #apply and save sepia
