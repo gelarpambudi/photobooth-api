@@ -21,6 +21,13 @@ class BeautyFilter(Preset):
     Vibrance(15)
   ]
 
+class DarkenFilter(Preset):
+  filters = [
+    Contrast(8),
+    Exposure(-5),
+    Brightness(-10)
+  ]
+
 
 def load_cascade_classifier(classifier_path):
   return cv2.CascadeClassifier(classifier_path)
@@ -43,7 +50,7 @@ def lookuptable(x, y):
   return spline(range(256))
 
 def detect_face(img, cascade_classifier):
-  grayscale = apply_grayscale_effect(img)
+  grayscale = apply_light_grayscale_effect(img)
   face_rects = cascade_classifier.detectMultiScale(grayscale, scaleFactor=1.1, minNeighbors=4)
   return face_rects
 
@@ -65,10 +72,18 @@ def apply_beauty_filter(img_path):
   return np_img
 
 
-def apply_grayscale_effect(np_img):
+def apply_light_grayscale_effect(np_img):
   grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
   return grayscale
 
+def apply_dark_grayscale_effect(img_path):
+  img = FImage(img_path)
+  img.apply(DarkenFilter)
+  img.save(img_path)
+  
+  np_img = load_image(img_path)
+  dark_grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
+  return dark_grayscale
 
 def apply_sepia_effect(np_img):
   sepia = np.array(np_img, dtype=np.float64)
@@ -117,9 +132,14 @@ def apply_all_effect(img_np, result_path, image):
     beauty_img = apply_beauty_filter(os.path.join(result_path, f"original/{img_file}"))
     save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
     
-    #apply and save grayscale
-    grayscale_img = apply_grayscale_effect(img_np)
-    save_image(grayscale_img, os.path.join(result_path, f"grayscale/{img_file}"))
+    #apply and save light grayscale
+    light_grayscale_img = apply_light_grayscale_effect(img_np)
+    save_image(light_grayscale_img, os.path.join(result_path, f"light_grayscale/{img_file}"))
+
+    #apply and save dark grayscale
+    save_image(img_np, os.path.join(result_path, f"dark_grayscale/{img_file}"))
+    dark_grayscale_img = apply_dark_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
+    save_image(dark_grayscale_img, os.path.join(result_path, f"dark_grayscale/{img_file}"))
 
     #apply and save sepia
     sepia_img = apply_sepia_effect(img_np)

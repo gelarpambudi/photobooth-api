@@ -28,6 +28,7 @@
         |   BODY   |   message        | string       |
         |   BODY   |   img_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/1.png`) |
         |   BODY   |   gif_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/compiled.gif`) |
+        |   BODY   |   compiled_url   | list of string (`{BASE_URL}/static/res_image/{tx_id}/{effect}/compiled.jpg`) |
         |   BODY    | error | string |
 
         E.g.

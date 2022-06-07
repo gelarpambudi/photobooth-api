@@ -49,6 +49,7 @@ def generate_image_api():
             "message": "Success",
             "img_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/1.png" for x in os.listdir(result_path) ],
             "gif_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.gif" for x in os.listdir(result_path) ],
+            "compiled_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ],
             "error": "null"
         }
         return jsonify(data), 200
