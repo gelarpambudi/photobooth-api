@@ -3,6 +3,7 @@ import cv2
 import imageio
 import numpy as np
 from config import app
+from PIL import Image
 from scipy.interpolate import UnivariateSpline
 
 from fimage import FImage
@@ -39,20 +40,48 @@ def load_image(img_path, transparent=False):
     img = cv2.imread(img_path)
   return img
 
+
 def save_image(np_img, save_path):
   cv2.imwrite(save_path, np_img)
 
+
 def resize_image(np_img, new_size):
-  return cv2.resize(np_img, new_size, cv2.INTER_AREA)
+  image  = Image.fromarray(np_img)
+  width  = image.size[0]
+  height = image.size[1]
+
+  aspect = width / float(height)
+
+  ideal_width = new_size[0]
+  ideal_height = new_size[1]
+  ideal_aspect = ideal_width / float(ideal_height)
+
+  if aspect > ideal_aspect:
+      #crop the left and right edges:
+      new_width = int(ideal_aspect * height)
+      offset = (width - new_width) / 2
+      resize = (offset, 0, width - offset, height)
+  else:
+      # crop the top and bottom:
+      new_height = int(width / ideal_aspect)
+      offset = (height - new_height) / 2
+      resize = (0, offset, width, height - offset)
+
+  result = image.crop(resize).resize((ideal_width, ideal_height), Image.ANTIALIAS)
+  result = np.asarray(result)
+  return result
+
 
 def lookuptable(x, y):
   spline = UnivariateSpline(x,y)
   return spline(range(256))
 
+
 def detect_face(img, cascade_classifier):
   grayscale = apply_light_grayscale_effect(img)
   face_rects = cascade_classifier.detectMultiScale(grayscale, scaleFactor=1.1, minNeighbors=4)
   return face_rects
+
 
 def apply_beauty_filter(img_path):
   img = FImage(img_path)
@@ -76,6 +105,7 @@ def apply_light_grayscale_effect(np_img):
   grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
   return grayscale
 
+
 def apply_dark_grayscale_effect(img_path):
   img = FImage(img_path)
   img.apply(DarkenFilter)
@@ -84,6 +114,7 @@ def apply_dark_grayscale_effect(img_path):
   np_img = load_image(img_path)
   dark_grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
   return dark_grayscale
+
 
 def apply_sepia_effect(np_img):
   sepia = np.array(np_img, dtype=np.float64)
@@ -124,42 +155,51 @@ def apply_invert_effect(np_img):
     inv = cv2.bitwise_not(np_img)
     return inv
 
+
 def apply_all_effect(img_np, result_path, image):
     img_file = image
 
     #save original effect
-    save_image(img_np, os.path.join(result_path, f"original/{img_file}"))
-    beauty_img = apply_beauty_filter(os.path.join(result_path, f"original/{img_file}"))
-    save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
+    if "original" in app.config['AVAILABLE_EFFECT']:
+      save_image(img_np, os.path.join(result_path, f"original/{img_file}"))
+      beauty_img = apply_beauty_filter(os.path.join(result_path, f"original/{img_file}"))
+      save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
     
     #apply and save light grayscale
-    light_grayscale_img = apply_light_grayscale_effect(img_np)
-    save_image(light_grayscale_img, os.path.join(result_path, f"light_grayscale/{img_file}"))
+    if "light_grayscale" in app.config['AVAILABLE_EFFECT']:
+      light_grayscale_img = apply_light_grayscale_effect(img_np)
+      save_image(light_grayscale_img, os.path.join(result_path, f"light_grayscale/{img_file}"))
 
     #apply and save dark grayscale
-    save_image(img_np, os.path.join(result_path, f"dark_grayscale/{img_file}"))
-    dark_grayscale_img = apply_dark_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
-    save_image(dark_grayscale_img, os.path.join(result_path, f"dark_grayscale/{img_file}"))
+    if "dark_grayscale" in app.config['AVAILABLE_EFFECT']:
+      save_image(img_np, os.path.join(result_path, f"dark_grayscale/{img_file}"))
+      dark_grayscale_img = apply_dark_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
+      save_image(dark_grayscale_img, os.path.join(result_path, f"dark_grayscale/{img_file}"))
 
     #apply and save sepia
-    sepia_img = apply_sepia_effect(img_np)
-    save_image(sepia_img, os.path.join(result_path, f"sepia/{img_file}"))
+    if "sepia" in app.config['AVAILABLE_EFFECT']:
+      sepia_img = apply_sepia_effect(img_np)
+      save_image(sepia_img, os.path.join(result_path, f"sepia/{img_file}"))
 
     #apply and save summer
-    summer_img = apply_summer_effect(img_np)
-    save_image(summer_img, os.path.join(result_path, f"summer/{img_file}"))
+    if "summer" in app.config['AVAILABLE_EFFECT']:
+      summer_img = apply_summer_effect(img_np)
+      save_image(summer_img, os.path.join(result_path, f"summer/{img_file}"))
 
     #apply and save winter
-    winter_img = apply_winter_effect(img_np)
-    save_image(winter_img, os.path.join(result_path, f"winter/{img_file}"))
+    if "winter" in app.config['AVAILABLE_EFFECT']:
+      winter_img = apply_winter_effect(img_np)
+      save_image(winter_img, os.path.join(result_path, f"winter/{img_file}"))
 
     #apply and save hdr
-    hdr_img = apply_hdr_effect(img_np)
-    save_image(hdr_img, os.path.join(result_path, f"hdr/{img_file}"))
+    if "hdr" in app.config['AVAILABLE_EFFECT']:
+      hdr_img = apply_hdr_effect(img_np)
+      save_image(hdr_img, os.path.join(result_path, f"hdr/{img_file}"))
 
     #apply and save invert
-    invert_img = apply_invert_effect(img_np)
-    save_image(invert_img, os.path.join(result_path, f"invert/{img_file}"))
+    if "invert" in app.config['AVAILABLE_EFFECT']:
+      invert_img = apply_invert_effect(img_np)
+      save_image(invert_img, os.path.join(result_path, f"invert/{img_file}"))
 
 
 def generate_gif(img_path, out_gif, delay=1.5):
@@ -227,11 +267,11 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     compiled_image = compile_np_image(
       src_img_path,
       img_list,
-      padding=70,
-      new_size=(1100,980) #(width, height)
+      padding=93,
+      new_size=(991,944) #(width, height)
     )
     center_padding = create_padding(
-      padding_width=65,
+      padding_width=188,
       padding_height=compiled_image.shape[0]
     )
     
@@ -240,7 +280,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=60
+      padding_height=82
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
@@ -255,7 +295,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
       padding_height=compiled_image.shape[0]
     )
     left_padding = create_padding(
-      padding_width=width_diff//2,
+      padding_width=(width_diff//2)+1,
       padding_height= compiled_image.shape[0]
     )
 
@@ -267,17 +307,17 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     compiled_image_1 = compile_np_image(
       src_img_path,
       img_list[:4],
-      padding=20,
-      new_size=(1150,790)
+      padding=24,
+      new_size=(990,778)
     )
     compiled_image_2 = compile_np_image(
       src_img_path,
       img_list[4:],
-      padding=20,
-      new_size=(1150,790)
+      padding=24,
+      new_size=(990,778)
     )
     center_padding = create_padding(
-      padding_width=30,
+      padding_width=188,
       padding_height=compiled_image_1.shape[0]
     )
 
@@ -286,7 +326,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=30
+      padding_height=46
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
@@ -314,17 +354,17 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     compiled_image_1 = compile_np_image(
       src_img_path,
       img_list[:4],
-      padding=20,
-      new_size=(1130,790)
+      padding=87,
+      new_size=(1022,714)
     )
     compiled_image_2 = compile_np_image(
       src_img_path,
       img_list[4:],
-      padding=20,
-      new_size=(1130,790)
+      padding=87,
+      new_size=(1022,714)
     )
     center_padding = create_padding(
-      padding_width=70,
+      padding_width=158,
       padding_height=compiled_image_1.shape[0]
     )
 
@@ -333,7 +373,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=130
+      padding_height=175
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
