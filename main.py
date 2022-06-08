@@ -44,12 +44,16 @@ def generate_image_api():
                 os.path.join(result_path, f"{effect_dir}/compiled.gif"),
                 delay=0.7
             )
+
+        img_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/1.png" for x in os.listdir(result_path) ]
+        gif_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.gif" for x in os.listdir(result_path) ]
+        compiled_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ]
         data = {
             "status_code": 200,
             "message": "Success",
-            "img_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/1.png" for x in os.listdir(result_path) ],
-            "gif_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.gif" for x in os.listdir(result_path) ],
-            "compiled_url": [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ],
+            "img_url": img_url.insert(0, img_url.pop(img_url.index("original"))),
+            "gif_url": gif_url,
+            "compiled_url": compiled_url,
             "error": "null"
         }
         return jsonify(data), 200

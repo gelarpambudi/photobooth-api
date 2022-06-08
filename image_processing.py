@@ -176,30 +176,10 @@ def apply_all_effect(img_np, result_path, image):
       dark_grayscale_img = apply_dark_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
       save_image(dark_grayscale_img, os.path.join(result_path, f"dark_grayscale/{img_file}"))
 
-    #apply and save sepia
-    if "sepia" in app.config['AVAILABLE_EFFECT']:
-      sepia_img = apply_sepia_effect(img_np)
-      save_image(sepia_img, os.path.join(result_path, f"sepia/{img_file}"))
-
     #apply and save summer
     if "summer" in app.config['AVAILABLE_EFFECT']:
       summer_img = apply_summer_effect(img_np)
       save_image(summer_img, os.path.join(result_path, f"summer/{img_file}"))
-
-    #apply and save winter
-    if "winter" in app.config['AVAILABLE_EFFECT']:
-      winter_img = apply_winter_effect(img_np)
-      save_image(winter_img, os.path.join(result_path, f"winter/{img_file}"))
-
-    #apply and save hdr
-    if "hdr" in app.config['AVAILABLE_EFFECT']:
-      hdr_img = apply_hdr_effect(img_np)
-      save_image(hdr_img, os.path.join(result_path, f"hdr/{img_file}"))
-
-    #apply and save invert
-    if "invert" in app.config['AVAILABLE_EFFECT']:
-      invert_img = apply_invert_effect(img_np)
-      save_image(invert_img, os.path.join(result_path, f"invert/{img_file}"))
 
 
 def generate_gif(img_path, out_gif, delay=1.5):
@@ -247,7 +227,6 @@ def overlay_transparent(bg_img, img_to_overlay_t):
 
     img1_bg = cv2.bitwise_and(bg_img.copy(),bg_img.copy(),mask = cv2.bitwise_not(mask))
     img2_fg = cv2.bitwise_and(overlay_color,overlay_color,mask = mask)
-
     bg_img = cv2.add(img1_bg, img2_fg)
 
     return bg_img
@@ -304,24 +283,18 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
 
     return final_image
   elif frame_name in app.config['AVAILABLE_8_FRAME'] and frame_name not in app.config['AVAILABLE_8_FRAME_ELLIPSE']:
-    compiled_image_1 = compile_np_image(
+    compiled_image_col = compile_np_image(
       src_img_path,
-      img_list[:4],
-      padding=24,
-      new_size=(990,778)
-    )
-    compiled_image_2 = compile_np_image(
-      src_img_path,
-      img_list[4:],
+      img_list,
       padding=24,
       new_size=(990,778)
     )
     center_padding = create_padding(
       padding_width=188,
-      padding_height=compiled_image_1.shape[0]
+      padding_height=compiled_image_col.shape[0]
     )
 
-    compiled_image = cv2.hconcat([compiled_image_1, center_padding, compiled_image_2])
+    compiled_image = cv2.hconcat([compiled_image_col, center_padding, compiled_image_col])
     
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
@@ -351,24 +324,18 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     return final_image
 
   elif frame_name in app.config['AVAILABLE_8_FRAME'] and frame_name in app.config['AVAILABLE_8_FRAME_ELLIPSE']:
-    compiled_image_1 = compile_np_image(
+    compiled_image_col = compile_np_image(
       src_img_path,
-      img_list[:4],
-      padding=87,
-      new_size=(1022,714)
-    )
-    compiled_image_2 = compile_np_image(
-      src_img_path,
-      img_list[4:],
+      img_list,
       padding=87,
       new_size=(1022,714)
     )
     center_padding = create_padding(
       padding_width=158,
-      padding_height=compiled_image_1.shape[0]
+      padding_height=compiled_image_col.shape[0]
     )
 
-    compiled_image = cv2.hconcat([compiled_image_1, center_padding, compiled_image_2])
+    compiled_image = cv2.hconcat([compiled_image_col, center_padding, compiled_image_col])
     
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
