@@ -51,7 +51,7 @@ def generate_image_api():
         data = {
             "status_code": 200,
             "message": "Success",
-            "img_url": img_url.insert(0, img_url.pop(img_url.index("original"))),
+            "img_url": img_url,
             "gif_url": gif_url,
             "compiled_url": compiled_url,
             "error": "null"
