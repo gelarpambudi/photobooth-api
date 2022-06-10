@@ -46,8 +46,20 @@ def generate_image_api():
             )
 
         img_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/1.png" for x in os.listdir(result_path) ]
+        img_url.insert(0, img_url.pop(img_url.index(
+                f"http://localhost:8080/static/res_image/{tx_id}/original/1.png"
+            )))
+
         gif_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.gif" for x in os.listdir(result_path) ]
+        gif_url.insert(0, gif_url.pop(gif_url.index(
+            f"http://localhost:8080/static/res_image/{tx_id}/original/compiled.gif"
+        )))
+
         compiled_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ]
+        compiled_url.insert(0, compiled_url.pop(compiled_url.index(
+            f"http://localhost:8080/static/res_image/{tx_id}/original/compiled.jpg"
+        )))
+        
         data = {
             "status_code": 200,
             "message": "Success",
