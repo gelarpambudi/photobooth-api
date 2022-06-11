@@ -246,8 +246,8 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     compiled_image = compile_np_image(
       src_img_path,
       img_list,
-      padding=93,
-      new_size=(991,944) #(width, height)
+      padding=94,
+      new_size=(993,945) #(width, height)
     )
     center_padding = create_padding(
       padding_width=188,
@@ -259,7 +259,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=82
+      padding_height=83
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
@@ -286,8 +286,8 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     compiled_image_col = compile_np_image(
       src_img_path,
       img_list,
-      padding=24,
-      new_size=(990,778)
+      padding=22,
+      new_size=(992,781)
     )
     center_padding = create_padding(
       padding_width=188,
@@ -299,7 +299,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=46
+      padding_height=71
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
@@ -328,7 +328,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
       src_img_path,
       img_list,
       padding=87,
-      new_size=(1022,714)
+      new_size=(1022,716)
     )
     center_padding = create_padding(
       padding_width=158,
