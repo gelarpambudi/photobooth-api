@@ -62,7 +62,7 @@
         |------|-----------|--------|
         |   BODY   |   status_code        |  int      |
         |   BODY   |   message        | string       |
-        |   BODY   |   frame_list   | dict consists of `eight_frame_list` and `six_frame_list` keys |
+        |   BODY   |   frame_list   | dict consists of `eight_frame_list`, `six_frame_list`, `six_frame_three_takes_list` keys |
 
         E.g.
         ```
