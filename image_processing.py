@@ -297,7 +297,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     )
     center_padding = create_padding(
       padding_width=188,
-      padding_height=compiled_image.shape[0]
+      padding_height=compiled_col_2.shape[0]
     )
     
     compiled_image = cv2.hconcat([compiled_col_1, center_padding, compiled_col_2])
