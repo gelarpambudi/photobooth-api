@@ -282,7 +282,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     final_image = overlay_transparent(compiled_image, frame_img)
 
     return final_image
-  elif frame_name in app.config['AVAILABLE_6_FRAME_3_TAKES']:
+  elif frame_name in app.config['AVAILABLE_6_FRAME_6_TAKES']:
     compiled_col_1 = compile_np_image(
       src_img_path,
       img_list[3:],

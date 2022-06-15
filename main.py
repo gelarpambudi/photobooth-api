@@ -83,14 +83,14 @@ def generate_image_api():
 def get_frame_api():
     eight_frame_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_8_FRAME'] ]
     six_frame_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_6_FRAME'] ]
-    six_frame_three_takes_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_6_FRAME_3_TAKES'] ]
+    six_frame_six_takes_list = [ f"http://localhost:8080/static/frame_assets/{x}" for x in app.config['AVAILABLE_6_FRAME_6_TAKES'] ]
     data = {
         "status_code": 200,
         "message": "Success",
         "frame_list": {
             "eight_frame_list": eight_frame_list,
             "six_frame_list": six_frame_list,
-            "six_frame_three_takes_list": six_frame_three_takes_list
+            "six_frame_six_takes_list": six_frame_six_takes_list
         }
     }
     return jsonify(data), 200
