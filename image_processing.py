@@ -326,6 +326,9 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
 
     compiled_image = cv2.hconcat([left_padding, compiled_image, right_padding])
     final_image = overlay_transparent(compiled_image, frame_img)
+
+    return final_image
+    
   elif frame_name in app.config['AVAILABLE_8_FRAME'] and frame_name not in app.config['AVAILABLE_8_FRAME_ELLIPSE']:
     compiled_image_col = compile_np_image(
       src_img_path,
