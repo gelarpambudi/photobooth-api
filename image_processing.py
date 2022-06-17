@@ -387,7 +387,7 @@ def compile_frame(frame_id, src_img_path, frame_base_dir):
     height_diff = frame_img.shape[0] - compiled_image.shape[0]
     top_padding = create_padding(
       padding_width=compiled_image.shape[1],
-      padding_height=175
+      padding_height=172
     )
     bottom_padding = create_padding(
       padding_width=compiled_image.shape[1],
