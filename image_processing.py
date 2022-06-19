@@ -24,9 +24,16 @@ class BeautyFilter(Preset):
 
 class DarkenFilter(Preset):
   filters = [
-    Contrast(8),
+    Contrast(-3.5),
     Exposure(-5),
-    Brightness(-10)
+    Brightness(-3)
+  ]
+
+class LightenFilter(Preset):
+  filters = [
+    Exposure(5),
+    Brightness(7),
+    Contrast(10)
   ]
 
 
@@ -78,7 +85,7 @@ def lookuptable(x, y):
 
 
 def detect_face(img, cascade_classifier):
-  grayscale = apply_light_grayscale_effect(img)
+  grayscale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   face_rects = cascade_classifier.detectMultiScale(grayscale, scaleFactor=1.1, minNeighbors=4)
   return face_rects
 
@@ -101,9 +108,14 @@ def apply_beauty_filter(img_path):
   return np_img
 
 
-def apply_light_grayscale_effect(np_img):
-  grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
-  return grayscale
+def apply_light_grayscale_effect(img_path):
+  img = FImage(img_path)
+  img.apply(LightenFilter)
+  img.save(img_path)
+  
+  np_img = load_image(img_path)
+  light_grayscale = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
+  return light_grayscale
 
 
 def apply_dark_grayscale_effect(img_path):
@@ -167,7 +179,8 @@ def apply_all_effect(img_np, result_path, image):
     
     #apply and save light grayscale
     if "light_grayscale" in app.config['AVAILABLE_EFFECT']:
-      light_grayscale_img = apply_light_grayscale_effect(img_np)
+      save_image(img_np, os.path.join(result_path, f"light_grayscale/{img_file}"))
+      light_grayscale_img = apply_light_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
       save_image(light_grayscale_img, os.path.join(result_path, f"light_grayscale/{img_file}"))
 
     #apply and save dark grayscale
