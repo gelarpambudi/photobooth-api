@@ -24,16 +24,16 @@ class BeautyFilter(Preset):
 
 class DarkenFilter(Preset):
   filters = [
-    Contrast(-3.5),
+    Contrast(8),
     Exposure(-5),
-    Brightness(-3)
+    Brightness(-10)
   ]
 
 class LightenFilter(Preset):
   filters = [
-    Exposure(5),
-    Brightness(7),
-    Contrast(10)
+    Exposure(0),
+    Brightness(0),
+    Contrast(0)
   ]
 
 
