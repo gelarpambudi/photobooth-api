@@ -57,7 +57,7 @@ def compose_email(recipient_name, email, tx_id, effect):
     
     return msg
 
-def send_email(message, recipient_email, smtp_servername, smtp_serverport):
+def send_email(app, message, recipient_email, smtp_servername, smtp_serverport):
     smtp = smtplib.SMTP(smtp_servername, smtp_serverport)
     smtp.starttls()
     smtp.login(app.config['EMAIL_USERNAME'], app.config['EMAIL_PASSWD'])
