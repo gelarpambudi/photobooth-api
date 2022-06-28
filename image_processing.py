@@ -186,11 +186,11 @@ def apply_all_effect(img_np, result_path, image):
 
 
 
-def generate_gif(img_path, out_gif, delay=1.5):
+def generate_gif(img_path, out_gif, delay=1.1):
   img_files = os.listdir(img_path)
   if "compiled.jpg" in img_files:
     img_files.remove("compiled.jpg")
-  with imageio.get_writer(out_gif, mode='I', duration=delay) as writer:
+  with imageio.get_writer(out_gif, format='GIF-PIL', quantizer=1, mode='I', duration=delay) as writer:
     for filename in img_files:
         image = imageio.imread(os.path.join(img_path, filename))
         writer.append_data(image)
