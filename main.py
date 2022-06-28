@@ -6,7 +6,7 @@ from config import app
 from image_processing import *
 from send_email import *
 from printer_utils import *
-
+from threading import Thread
 
 @app.route("/api/generate-image", methods=["POST"])
 def generate_image_api():
@@ -47,17 +47,17 @@ def generate_image_api():
 
         img_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/1.png" for x in os.listdir(result_path) ]
         img_url.insert(0, img_url.pop(img_url.index(
-                f"http://localhost:8080/static/res_image/{tx_id}/original/1.png"
+                f"http://localhost:8080/static/res_image/{tx_id}/light_original/1.png"
             )))
 
         gif_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.gif" for x in os.listdir(result_path) ]
         gif_url.insert(0, gif_url.pop(gif_url.index(
-            f"http://localhost:8080/static/res_image/{tx_id}/original/compiled.gif"
+            f"http://localhost:8080/static/res_image/{tx_id}/light_original/compiled.gif"
         )))
 
         compiled_url = [ f"http://localhost:8080/static/res_image/{tx_id}/{x}/compiled.jpg" for x in os.listdir(result_path) ]
         compiled_url.insert(0, compiled_url.pop(compiled_url.index(
-            f"http://localhost:8080/static/res_image/{tx_id}/original/compiled.jpg"
+            f"http://localhost:8080/static/res_image/{tx_id}/light_original/compiled.jpg"
         )))
         
         data = {
@@ -107,12 +107,11 @@ def send_email_api():
     composed_email = compose_email(recipient_name, [email], tx_id, effect)
 
     try:
-        send_email(
-            composed_email,
-            email,
-            app.config['SMTP_SERVERNAME'],
-            app.config['SMTP_SERVERPORT']
-            )
+        thr = Thread(
+            target=send_email,
+            args=[app,composed_email,email,app.config['SMTP_SERVERNAME'],app.config['SMTP_SERVERPORT']]
+        )
+        thr.start()
         data = {
             "status_code": 200,
             "message": "Success",

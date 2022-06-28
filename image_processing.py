@@ -24,16 +24,16 @@ class BeautyFilter(Preset):
 
 class DarkenFilter(Preset):
   filters = [
-    Contrast(-3.5),
+    Contrast(8),
     Exposure(-5),
-    Brightness(-3)
+    Brightness(-10)
   ]
 
 class LightenFilter(Preset):
   filters = [
-    Exposure(5),
-    Brightness(7),
-    Contrast(10)
+    Exposure(0),
+    Brightness(0),
+    Contrast(0)
   ]
 
 
@@ -96,15 +96,6 @@ def apply_beauty_filter(img_path):
   img.save(img_path)
 
   np_img = load_image(img_path)
-  face = detect_face(
-    np_img,
-    load_cascade_classifier(app.config["CASCADE_CLASSIFIER_XML"])
-  )
-  
-  for (x,y,w,h) in face:
-    beauty = cv2.bilateralFilter(np_img[y:y+h, x:x+w], 7, 25, 25)
-    np_img[y:y+h, x:x+w] = beauty
-
   return np_img
 
 
@@ -171,11 +162,15 @@ def apply_invert_effect(np_img):
 def apply_all_effect(img_np, result_path, image):
     img_file = image
 
-    #save original effect
+    #apply and save original
     if "original" in app.config['AVAILABLE_EFFECT']:
       save_image(img_np, os.path.join(result_path, f"original/{img_file}"))
-      beauty_img = apply_beauty_filter(os.path.join(result_path, f"original/{img_file}"))
-      save_image(beauty_img, os.path.join(result_path, f"original/{img_file}"))
+
+    #save light_original effect
+    if "light_original" in app.config['AVAILABLE_EFFECT']:
+      save_image(img_np, os.path.join(result_path, f"light_original/{img_file}"))
+      beauty_img = apply_beauty_filter(os.path.join(result_path, f"light_original/{img_file}"))
+      save_image(beauty_img, os.path.join(result_path, f"light_original/{img_file}"))
     
     #apply and save light grayscale
     if "light_grayscale" in app.config['AVAILABLE_EFFECT']:
@@ -189,17 +184,13 @@ def apply_all_effect(img_np, result_path, image):
       dark_grayscale_img = apply_dark_grayscale_effect(os.path.join(result_path, f"original/{img_file}"))
       save_image(dark_grayscale_img, os.path.join(result_path, f"dark_grayscale/{img_file}"))
 
-    #apply and save summer
-    if "summer" in app.config['AVAILABLE_EFFECT']:
-      summer_img = apply_summer_effect(img_np)
-      save_image(summer_img, os.path.join(result_path, f"summer/{img_file}"))
 
 
-def generate_gif(img_path, out_gif, delay=1.5):
+def generate_gif(img_path, out_gif, delay=1.1):
   img_files = os.listdir(img_path)
   if "compiled.jpg" in img_files:
     img_files.remove("compiled.jpg")
-  with imageio.get_writer(out_gif, mode='I', duration=delay) as writer:
+  with imageio.get_writer(out_gif, format='GIF-PIL', quantizer=1, mode='I', duration=delay) as writer:
     for filename in img_files:
         image = imageio.imread(os.path.join(img_path, filename))
         writer.append_data(image)
